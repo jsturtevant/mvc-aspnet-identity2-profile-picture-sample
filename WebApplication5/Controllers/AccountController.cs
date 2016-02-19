@@ -175,7 +175,7 @@ namespace WebApplication5.Controllers
 
         
 
-        public FileContentResult Photo()
+        public FileResult Photo()
         {
             // get EF Database (maybe different way in your applicaiton)
             var db = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
@@ -184,7 +184,15 @@ namespace WebApplication5.Controllers
             var userId = User.Identity.GetUserId();
             var user = db.Users.Where(x => x.Id == userId).FirstOrDefault();
 
-            return new FileContentResult(user.ProfilePicture, "image/jpeg");
+
+            if (user.ProfilePicture != null)
+            {
+                return new FileContentResult(user.ProfilePicture, "image/jpeg");
+            }
+            else
+            {
+                return new FilePathResult("/Content/blankprofile.png", "image/jpeg");
+            }
         }
 
         //
